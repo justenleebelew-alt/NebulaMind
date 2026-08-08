@@ -1,0 +1,36 @@
+{
+  "id": "com.auracosmos.app",
+  "short_name": "AuraCosmos",
+  "name": "AuraCosmos - Galaxy Mental Health",
+  "description": "Galaxy Mental Health, Medical Portal Sync, AI Medical Notes & Breathing Companion",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "display": "standalone",
+  "orientation": "portrait",
+  "scope": "/",
+  "categories": ["health", "medical", "lifestyle"],
+  "dir": "ltr",
+  "lang": "en-US",
+  "prefer_related_applications": false
+}

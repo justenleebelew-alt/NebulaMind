@@ -1,0 +1,6 @@
+{
+  "name": "AuraCosmos - Neon Galaxy Mental Health & Breathing",
+  "description": "Swirling galaxy mental health companion tailored for BPD, Bipolar, MDD, and ADHD with 3 interactive breathing exercises, expanding sacred crystal geometry, calm male voice guidance, Wear OS stress monitoring, and Gemini AI journaling.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
