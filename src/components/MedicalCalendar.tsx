@@ -74,7 +74,7 @@ export const MedicalCalendar: React.FC<MedicalCalendarProps> = ({
   const getGoogleCalendarUrl = (app: MedicalAppointment) => {
     const title = encodeURIComponent(`Medical Appointment: ${app.title} (${app.doctorName})`);
     const details = encodeURIComponent(
-      `Provider: ${app.doctorName}\nSpecialty: ${app.specialty}\nLocation: ${app.location}\nPrep Instructions: ${app.prepInstructions || 'None'}\nSynced via AuraCosmos Health Portal`
+      `Provider: ${app.doctorName}\nSpecialty: ${app.specialty}\nLocation: ${app.location}\nPrep Instructions: ${app.prepInstructions || 'None'}\nSynced via Nebula Mind Health Portal`
     );
     const location = encodeURIComponent(app.location);
 
@@ -92,7 +92,7 @@ export const MedicalCalendar: React.FC<MedicalCalendarProps> = ({
   const handleDownloadICS = (app: MedicalAppointment) => {
     const icsContent = `BEGIN:VCALENDAR
 VERSION:2.0
-PRODID:-//AuraCosmos Health Portal//EN
+PRODID:-//Nebula Mind Health Portal//EN
 BEGIN:VEVENT
 SUMMARY:Medical Appointment: ${app.title}
 DESCRIPTION:Provider: ${app.doctorName}\\nSpecialty: ${app.specialty}\\nPrep: ${app.prepInstructions || 'None'}

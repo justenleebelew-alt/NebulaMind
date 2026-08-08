@@ -1,7 +1,7 @@
 {
-  "id": "com.auracosmos.app",
-  "short_name": "AuraCosmos",
-  "name": "AuraCosmos - Galaxy Mental Health",
+  "id": "com.nebulamind.app",
+  "short_name": "Nebula Mind",
+  "name": "Nebula Mind - Galaxy Mental Health",
   "description": "Galaxy Mental Health, Medical Portal Sync, AI Medical Notes & Breathing Companion",
   "icons": [
     {

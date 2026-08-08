@@ -1,5 +1,5 @@
 /**
- * Audio synthesis utility for AuraCosmos
+ * Audio synthesis utility for Nebula Mind
  * Handles cosmic ambient drone, male voice speech guidance (Gemini API TTS + Web Speech API fallback),
  * and subtle phase completion chimes.
  */

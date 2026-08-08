@@ -191,12 +191,17 @@ export default function App() {
         {/* Top Header / App Branding */}
         <header className="px-4 pt-4 pb-2 flex items-center justify-between border-b border-cyan-500/20 backdrop-blur-md bg-black/40">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-gradient-to-tr from-cyan-500 to-pink-500 shadow-[0_0_15px_rgba(0,243,255,0.6)]">
-              <Sparkles className="w-5 h-5 text-black" />
+            <div className="relative group">
+              <img
+                src="/app_icon.jpg"
+                alt="Nebula Mind Logo"
+                className="w-10 h-10 rounded-xl border-2 border-cyan-400/60 object-cover shadow-[0_0_18px_rgba(0,243,255,0.7)] group-hover:scale-105 transition-transform"
+                referrerPolicy="no-referrer"
+              />
             </div>
             <div>
               <h1 className="text-xl font-extrabold tracking-wider bg-gradient-to-r from-cyan-300 via-purple-200 to-pink-400 bg-clip-text text-transparent">
-                AURA COSMOS
+                NEBULA MIND
               </h1>
               <p className="text-[10px] text-cyan-200/80 font-mono">
                 Galaxy Mental Health & Medical Portal Sync
