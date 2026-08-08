@@ -2,15 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { CosmicBackground } from './components/CosmicBackground';
 import { BreathingScreen } from './components/BreathingScreen';
 import { DisorderProfileSelector } from './components/DisorderProfileSelector';
+import { DailyAffirmationBanner } from './components/DailyAffirmationBanner';
 import { GeminiJournal } from './components/GeminiJournal';
 import { MedicalCalendar } from './components/MedicalCalendar';
 import { OrganizerChecklist } from './components/OrganizerChecklist';
+import { AIToolsHub } from './components/AIToolsHub';
 import { ConditionProfile, JournalEntry, MedicalAppointment, MedicalPortalStatus, MedicalPortalProvider, ChecklistItem } from './types';
 import { DISORDER_PROFILES } from './data/disorders';
-import { Wind, BookOpen, ShieldCheck, Sparkles, Calendar as CalendarIcon, CheckSquare } from 'lucide-react';
+import { Wind, BookOpen, ShieldCheck, Sparkles, Calendar as CalendarIcon, CheckSquare, Cpu } from 'lucide-react';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<'BREATHING' | 'CALENDAR' | 'ORGANIZER' | 'JOURNAL' | 'SKILLS'>('BREATHING');
+  const [activeTab, setActiveTab] = useState<'BREATHING' | 'AI_TOOLS' | 'CALENDAR' | 'ORGANIZER' | 'JOURNAL' | 'SKILLS'>('BREATHING');
   const [selectedCondition, setSelectedCondition] = useState<ConditionProfile>('BPD');
 
   // Journal entries state with localStorage persistence
@@ -216,11 +218,22 @@ export default function App() {
           onSelect={(cond) => setSelectedCondition(cond)}
         />
 
+        {/* Daily Positive Affirmation Greeting Banner */}
+        <DailyAffirmationBanner selectedCondition={selectedCondition} />
+
         {/* Tab View Switcher */}
         <main className="flex-1 px-2 pt-2">
           {activeTab === 'BREATHING' && (
             <BreathingScreen
               selectedCondition={selectedCondition}
+            />
+          )}
+
+          {activeTab === 'AI_TOOLS' && (
+            <AIToolsHub
+              selectedCondition={selectedCondition}
+              journalEntries={journalEntries}
+              onOpenBreathing={() => setActiveTab('BREATHING')}
             />
           )}
 
@@ -282,55 +295,65 @@ export default function App() {
         </main>
 
         {/* Bottom Mobile Navigation Dock */}
-        <nav className="fixed bottom-3 left-1/2 -translate-x-1/2 w-[95%] max-w-lg z-30 p-2 rounded-2xl bg-black/85 border border-cyan-500/40 backdrop-blur-xl shadow-[0_0_30px_rgba(0,243,255,0.4)] flex justify-around items-center">
+        <nav className="fixed bottom-3 left-1/2 -translate-x-1/2 w-[98%] max-w-xl z-30 p-2 rounded-2xl bg-black/85 border border-cyan-500/40 backdrop-blur-xl shadow-[0_0_30px_rgba(0,243,255,0.4)] flex justify-around items-center">
           <button
             onClick={() => setActiveTab('BREATHING')}
-            className={`flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition ${
+            className={`flex flex-col items-center gap-1 px-2.5 py-1.5 rounded-xl transition ${
               activeTab === 'BREATHING' ? 'text-cyan-300 bg-cyan-950/60 font-bold' : 'text-gray-400 hover:text-white'
             }`}
           >
-            <Wind className="w-5 h-5" />
-            <span className="text-[9px] uppercase font-mono tracking-wider">Breathing</span>
+            <Wind className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="text-[8px] sm:text-[9px] uppercase font-mono tracking-wider">Breathing</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('AI_TOOLS')}
+            className={`flex flex-col items-center gap-1 px-2.5 py-1.5 rounded-xl transition ${
+              activeTab === 'AI_TOOLS' ? 'text-pink-300 bg-pink-950/60 font-bold border border-pink-500/40 shadow-[0_0_12px_rgba(255,0,127,0.3)]' : 'text-cyan-400 hover:text-white'
+            }`}
+          >
+            <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-pink-400 animate-pulse" />
+            <span className="text-[8px] sm:text-[9px] uppercase font-mono tracking-wider font-bold">AI Suite</span>
           </button>
 
           <button
             onClick={() => setActiveTab('CALENDAR')}
-            className={`flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition ${
+            className={`flex flex-col items-center gap-1 px-2.5 py-1.5 rounded-xl transition ${
               activeTab === 'CALENDAR' ? 'text-cyan-300 bg-cyan-950/60 font-bold' : 'text-gray-400 hover:text-white'
             }`}
           >
-            <CalendarIcon className="w-5 h-5" />
-            <span className="text-[9px] uppercase font-mono tracking-wider">Calendar</span>
+            <CalendarIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="text-[8px] sm:text-[9px] uppercase font-mono tracking-wider">Calendar</span>
           </button>
 
           <button
             onClick={() => setActiveTab('ORGANIZER')}
-            className={`flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition ${
+            className={`flex flex-col items-center gap-1 px-2.5 py-1.5 rounded-xl transition ${
               activeTab === 'ORGANIZER' ? 'text-pink-300 bg-pink-950/60 font-bold' : 'text-gray-400 hover:text-white'
             }`}
           >
-            <CheckSquare className="w-5 h-5" />
-            <span className="text-[9px] uppercase font-mono tracking-wider">Checklist</span>
+            <CheckSquare className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="text-[8px] sm:text-[9px] uppercase font-mono tracking-wider">Checklist</span>
           </button>
 
           <button
             onClick={() => setActiveTab('JOURNAL')}
-            className={`flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition ${
+            className={`flex flex-col items-center gap-1 px-2.5 py-1.5 rounded-xl transition ${
               activeTab === 'JOURNAL' ? 'text-pink-300 bg-pink-950/60 font-bold' : 'text-gray-400 hover:text-white'
             }`}
           >
-            <BookOpen className="w-5 h-5" />
-            <span className="text-[9px] uppercase font-mono tracking-wider">AI Journal</span>
+            <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="text-[8px] sm:text-[9px] uppercase font-mono tracking-wider">AI Journal</span>
           </button>
 
           <button
             onClick={() => setActiveTab('SKILLS')}
-            className={`flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition ${
+            className={`flex flex-col items-center gap-1 px-2.5 py-1.5 rounded-xl transition ${
               activeTab === 'SKILLS' ? 'text-purple-300 bg-purple-950/60 font-bold' : 'text-gray-400 hover:text-white'
             }`}
           >
-            <ShieldCheck className="w-5 h-5" />
-            <span className="text-[9px] uppercase font-mono tracking-wider">DBT</span>
+            <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="text-[8px] sm:text-[9px] uppercase font-mono tracking-wider">DBT</span>
           </button>
         </nav>
       </div>

@@ -331,6 +331,254 @@ Respond strictly with JSON schema:
   }
 });
 
+// 7. AI Cognitive Reframing Assistant (CBT Thought Transformer)
+app.post("/api/gemini/cbt-reframe", async (req, res) => {
+  try {
+    const { negativeThought, condition = "ALL" } = req.body;
+    if (!negativeThought) {
+      return res.status(400).json({ error: "Negative thought string is required" });
+    }
+
+    const ai = getGenAIClient();
+    const systemPrompt = `You are a compassionate, CBT-certified AI therapist assistant.
+Help the user identify cognitive distortions in their unhelpful thought and generate 3 balanced reframes.
+Tailor gentle tone for condition: ${condition}.
+
+Respond strictly with JSON schema:
+{
+  "identifiedDistortions": ["Catastrophizing", "All-or-Nothing Thinking", "Emotional Reasoning"],
+  "reframes": [
+    "Reframe 1: Realistic & gentle alternative perspective",
+    "Reframe 2: Balanced, compassionate self-view",
+    "Reframe 3: Action-oriented grounded truth"
+  ],
+  "groundingStatement": "A short, powerful 1-sentence anchor statement to repeat when this thought returns.",
+  "microAction": "One small step to take right now"
+}`;
+
+    const response = await ai.models.generateContent({
+      model: "gemini-3.6-flash",
+      contents: `Automatic Negative Thought:\n"${negativeThought}"`,
+      config: {
+        systemInstruction: systemPrompt,
+        responseMimeType: "application/json",
+        temperature: 0.7,
+      },
+    });
+
+    const data = JSON.parse(response.text || "{}");
+    res.json({ success: true, ...data });
+  } catch (error: any) {
+    console.error("Error in CBT reframe:", error);
+    res.status(500).json({ error: error?.message || "Failed to generate CBT reframes" });
+  }
+});
+
+// 8. AI Somatic Grounding & Sensorium Generator
+app.post("/api/gemini/somatic-grounding", async (req, res) => {
+  try {
+    const { environment = "Desk/Work", distressLevel = 7, condition = "ALL" } = req.body;
+
+    const ai = getGenAIClient();
+    const systemPrompt = `You are a somatic therapist and grounding specialist for neurodivergent individuals (${condition}).
+Generate a custom 5-4-3-2-1 sensory grounding exercise specifically designed for someone in this setting: "${environment}" with distress level ${distressLevel}/10.
+
+Respond strictly with JSON schema:
+{
+  "title": "Grounding Exercise Name",
+  "physicalPosture": "Quick body posture adjustment (e.g. drop shoulders, unclamp jaw, feet flat on floor)",
+  "sensorySteps": {
+    "see": ["Thing 1 in room", "Thing 2 in room", "Thing 3 in room", "Thing 4 in room", "Thing 5 in room"],
+    "touch": ["Feel 1", "Feel 2", "Feel 3", "Feel 4"],
+    "hear": ["Sound 1", "Sound 2", "Sound 3"],
+    "smell": ["Scent 1", "Scent 2"],
+    "taste": ["Taste or mouth sensation"]
+  },
+  "tactileFocusGuide": "A 1-minute physical sensation focus instruction",
+  "closingBreath": "Custom breathing cue"
+}`;
+
+    const response = await ai.models.generateContent({
+      model: "gemini-3.6-flash",
+      contents: `Create somatic grounding for environment: ${environment}, distress level: ${distressLevel}/10.`,
+      config: {
+        systemInstruction: systemPrompt,
+        responseMimeType: "application/json",
+        temperature: 0.7,
+      },
+    });
+
+    const data = JSON.parse(response.text || "{}");
+    res.json({ success: true, ...data });
+  } catch (error: any) {
+    console.error("Error generating somatic grounding:", error);
+    res.status(500).json({ error: error?.message || "Failed to generate somatic grounding" });
+  }
+});
+
+// 9. AI Panic & Acute Crisis De-escalation Companion
+app.post("/api/gemini/panic-deescalate", async (req, res) => {
+  try {
+    const { message = "I feel panic rising, my chest feels tight and heart is racing.", condition = "ALL" } = req.body;
+
+    const ai = getGenAIClient();
+    const systemPrompt = `You are an acute crisis de-escalation AI guide.
+Your purpose is to immediately soothe panic attacks and high emotional distress.
+Use ultra-calm, short, slow-paced sentences with non-triggering validation.
+Focus on DBT TIPP skills (Temperature, Intense Exercise, Paced Breathing, Paired Relaxation).
+
+Respond strictly with JSON schema:
+{
+  "reassurance": "Gentle, immediate validation confirming they are safe and this feeling will pass",
+  "tippSkill": "Specific physical TIPP skill (e.g., holds ice cube, splash cold water, press feet into floor)",
+  "breathPacingGuide": "Breath counting instruction (e.g. Inhale 1..2..3..4, Hold 1..2, Exhale 1..2..3..4..5..6)",
+  "sensoryAnchor": "1 immediate visual/physical anchor to touch right now",
+  "nextSoothingPrompt": "Calming question or grounding prompt for next step"
+}`;
+
+    const response = await ai.models.generateContent({
+      model: "gemini-3.6-flash",
+      contents: `User in distress: "${message}" (Condition: ${condition})`,
+      config: {
+        systemInstruction: systemPrompt,
+        responseMimeType: "application/json",
+        temperature: 0.5,
+      },
+    });
+
+    const data = JSON.parse(response.text || "{}");
+    res.json({ success: true, ...data });
+  } catch (error: any) {
+    console.error("Error in panic de-escalation:", error);
+    res.status(500).json({ error: error?.message || "Failed to process panic response" });
+  }
+});
+
+// 10. AI Mood Pattern & Trigger Insights Analyzer
+app.post("/api/gemini/mood-insights", async (req, res) => {
+  try {
+    const { journalEntries = [], condition = "ALL" } = req.body;
+
+    const ai = getGenAIClient();
+    const systemPrompt = `You are a psychiatric data analyst and mood pattern specialist for ${condition}.
+Analyze mood patterns, trigger themes, and cognitive habits to provide actionable, non-judgmental wellness insights.
+
+Respond strictly with JSON schema:
+{
+  "detectedTriggers": ["Trigger 1", "Trigger 2"],
+  "emotionalTrend": "Overview of emotional stability / fluctuations",
+  "neurodivergentInsight": "Insight related to BPD/Bipolar/MDD/ADHD patterns",
+  "preventativeCopingStrategy": "Actionable routine adjustment to prevent burnout/splitting",
+  "wellnessScoreEstimate": 82
+}`;
+
+    const response = await ai.models.generateContent({
+      model: "gemini-3.6-flash",
+      contents: `Recent Journal Logs:\n${JSON.stringify(journalEntries.slice(0, 10))}`,
+      config: {
+        systemInstruction: systemPrompt,
+        responseMimeType: "application/json",
+        temperature: 0.6,
+      },
+    });
+
+    const data = JSON.parse(response.text || "{}");
+    res.json({ success: true, ...data });
+  } catch (error: any) {
+    console.error("Error analyzing mood insights:", error);
+    res.status(500).json({ error: error?.message || "Failed to analyze mood insights" });
+  }
+});
+
+// 11. AI Custom Guided Meditation & Visualization Sculptor
+app.post("/api/gemini/guided-meditation", async (req, res) => {
+  try {
+    const { theme = "Cosmic Crystal Sanctuary", targetState = "Deep Relaxation", durationMinutes = 5 } = req.body;
+
+    const ai = getGenAIClient();
+    const systemPrompt = `You are a master meditation guide creating multi-sensory guided visualizations.
+Create a ${durationMinutes}-minute guided meditation script on theme "${theme}" targeting "${targetState}".
+
+Respond strictly with JSON schema:
+{
+  "title": "Script Title",
+  "sensoryPalette": ["Color", "Texture", "Sound", "Scent"],
+  "visualizationScenes": [
+    {
+      "phase": "Arrival & Breath",
+      "guidanceText": "Slow spoken script lines...",
+      "breathingCue": "Inhale deeply..."
+    },
+    {
+      "phase": "Deep Sanctuary Immersion",
+      "guidanceText": "Vivid sensory imagery lines...",
+      "breathingCue": "Hold softly..."
+    },
+    {
+      "phase": "Integration & Awakening",
+      "guidanceText": "Return to body lines...",
+      "breathingCue": "Exhale completely..."
+    }
+  ],
+  "fullSpokenScript": "Unified full spoken text for speech synthesis"
+}`;
+
+    const response = await ai.models.generateContent({
+      model: "gemini-3.6-flash",
+      contents: `Theme: ${theme}, Goal: ${targetState}, Duration: ${durationMinutes} mins.`,
+      config: {
+        systemInstruction: systemPrompt,
+        responseMimeType: "application/json",
+        temperature: 0.75,
+      },
+    });
+
+    const data = JSON.parse(response.text || "{}");
+    res.json({ success: true, ...data });
+  } catch (error: any) {
+    console.error("Error creating guided meditation:", error);
+    res.status(500).json({ error: error?.message || "Failed to generate guided meditation" });
+  }
+});
+
+// 12. AI Sleep & Wind-Down Story Generator
+app.post("/api/gemini/sleep-story", async (req, res) => {
+  try {
+    const { topic = "Floating through a starlight nebula", lengthMinutes = 5 } = req.body;
+
+    const ai = getGenAIClient();
+    const systemPrompt = `You are a hypnotic bedtime storyteller crafting gentle, slow-tempo bedtime stories to slow heart rate and stop racing thoughts.
+
+Respond strictly with JSON schema:
+{
+  "title": "Bedtime Story Title",
+  "atmosphere": "Atmospheric sound/vibe description",
+  "storyParagraphs": [
+    "Paragraph 1 - Slow rhythmic setting of scene...",
+    "Paragraph 2 - Deepening relaxation...",
+    "Paragraph 3 - Gentle drift towards sleep..."
+  ],
+  "driftOffAffirmation": "Final whisper affirmation"
+}`;
+
+    const response = await ai.models.generateContent({
+      model: "gemini-3.6-flash",
+      contents: `Topic: ${topic}, Target length: ${lengthMinutes} minutes.`,
+      config: {
+        systemInstruction: systemPrompt,
+        responseMimeType: "application/json",
+        temperature: 0.8,
+      },
+    });
+
+    const data = JSON.parse(response.text || "{}");
+    res.json({ success: true, ...data });
+  } catch (error: any) {
+    console.error("Error generating sleep story:", error);
+    res.status(500).json({ error: error?.message || "Failed to generate sleep story" });
+  }
+});
+
 async function startServer() {
   // Always serve files from public folder (manifest.json, sw.js, icon.svg, etc.)
   app.use(express.static(path.join(process.cwd(), "public")));
